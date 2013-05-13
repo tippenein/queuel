@@ -14,7 +14,8 @@ module Queuel
   end
 
   def self.engine
-    config.engine || Null::Engine
+    requires
+    Object.module_eval("::#{const_name}", __FILE__, __LINE__)
   end
 
   def self.configure(&block)
@@ -27,6 +28,21 @@ module Queuel
 
   def self.client
     Client.new engine, credentials
+  end
+
+  def self.engines
+    {
+      iron_mq: { require: 'iron_mq', const: "IronMq" },
+      null: { const: "Null" }
+    }
+  end
+
+  def self.requires
+    require engines[config.engine][:require] if engines.fetch(config.engine, {})[:require]
+  end
+
+  def self.const_name
+    "Queuel::#{engines.fetch(config.engine, {}).fetch(:const, nil) || engines[:null][:const]}::Engine"
   end
 
   class Configurator

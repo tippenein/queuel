@@ -21,7 +21,7 @@ module Queuel
       end
 
       def try_typhoeus
-        require 'iron_mq'
+        require 'typhoeus'
       rescue LoadError
         false
       end
