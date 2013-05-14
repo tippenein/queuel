@@ -5,7 +5,7 @@ module Queuel
       extend Forwardable
       def_delegators :message_object, :delete
 
-      def self.new_from_iron_mq_object(message_object)
+      def self.new_from_bare(message_object)
         allocate.tap { |instance|
           instance.send :initialize_from_iron_mq_object, message_object
         }
