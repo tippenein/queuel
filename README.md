@@ -89,8 +89,8 @@ message.delete    # => Delete the message
 
 ## TODO
 
-* Implement Common message wrapper
 * Implement AMQP
+* Configureable exponential back-off on `receive`
 
 ## Contributing
 
