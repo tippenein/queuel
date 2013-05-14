@@ -1,24 +1,83 @@
 # Queuel
 
-TODO: Write a gem description
+Queuel is a kewl, lite wrapper around Queue interfaces. Currently it implements:
+
+* IronMQ
+* Null pattern
+
+Each of these should reliably implement:
+
+* `push`
+* `pop`
+* `receive`
+
+Along with some further conveniences.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add this line to your application's Gemfile as well as the proper Gem for
+your queuing:
 
-    gem 'queuel'
+```ruby
+gem 'iron_mq'
+# IronMQ recommends `gem "typhoeus"` as well for some speed benefits
+gem 'queuel'
+```
 
 And then execute:
 
     $ bundle
 
-Or install it yourself as:
+You will then want to configure:
 
-    $ gem install queuel
+```ruby
+Queuel.configure do
+  default_queue :venues # Optional, but a queue must be selected before running put/pop/receive
+  credentials token: 'asdufasdf8a7sd8fa7sdf', project_id: 'project_id' # requirement depends on your Queue
+  engine :iron_mq # currently only [:iron_mq, :null] available
+end
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+Queuel.pop
+Queuel.push "My message to you"
+Queuel.receive do |message|
+  puts "I received #{message.msg}" # NOTE the message interface may change, this is currently not wrapped by the gem
+end
+
+# With the non-default queue
+
+Queuel.with("officials").pop
+Queuel.with("officials").push "My message to you"
+Queuel.with("officials").receive do |message|
+  puts "I received #{message.msg}" # NOTE the message interface may change, this is currently not wrapped by the gem
+end
+
+# Timeout the receiving
+
+Queuel.receive poll_timeout: 60 do |message|
+  puts "I received #{message.msg}" # NOTE the message interface may change, this is currently not wrapped by the gem
+end
+
+# Don't receive more than 10 nil messages
+
+Queuel.receive max_consecutive_fails: 10 do |message|
+  puts "I received #{message.msg}" # NOTE the message interface may change, this is currently not wrapped by the gem
+end
+
+# Break on nil
+
+Queuel.receive break_if_nil: true do |message|
+  puts "I received #{message.msg}" # NOTE the message interface may change, this is currently not wrapped by the gem
+end
+```
+
+## TODO
+
+* Implement Common message wrapper
+* Implement AMQP
 
 ## Contributing
 
