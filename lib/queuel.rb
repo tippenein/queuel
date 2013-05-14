@@ -4,6 +4,7 @@ require "queuel/base_klass"
 
 require "queuel/base/engine"
 require "queuel/base/queue"
+require "queuel/base/message"
 
 require "queuel/null/message"
 require "queuel/null/engine"
