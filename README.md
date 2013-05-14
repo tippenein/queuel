@@ -1,4 +1,5 @@
 # Queuel
+[![Build Status](https://travis-ci.org/sportngin/queuel.png?branch=master)](https://travis-ci.org/sportngin/queuel)
 
 Queuel is a kewl, lite wrapper around Queue interfaces. Currently it implements:
 
