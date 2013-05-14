@@ -32,9 +32,14 @@ You will then want to configure:
 
 ```ruby
 Queuel.configure do
-  default_queue :venues # Optional, but a queue must be selected before running put/pop/receive
-  credentials token: 'asdufasdf8a7sd8fa7sdf', project_id: 'project_id' # requirement depends on your Queue
-  engine :iron_mq # currently only [:iron_mq, :null] available
+  # Optional, but a queue must be selected before running put/pop/receive
+  default_queue :venues
+
+  # requirement depends on your Queue
+  credentials token: 'asdufasdf8a7sd8fa7sdf', project_id: 'project_id'
+
+  # currently only [:iron_mq, :null] available
+  engine :iron_mq
 end
 ```
 
