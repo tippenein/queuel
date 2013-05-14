@@ -21,5 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
+  spec.add_development_dependency "simplecov"
   spec.add_development_dependency "iron_mq"
+  spec.add_development_dependency "json", "~> 1.7.7"
 end

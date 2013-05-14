@@ -4,6 +4,11 @@
 # loaded once.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+require 'simplecov'
+SimpleCov.start do
+  add_filter '/spec/'
+end
+
 require 'queuel'
 Dir["./spec/support/**/*.rb"].sort.each {|f| require f}
 RSpec.configure do |config|
