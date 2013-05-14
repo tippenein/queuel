@@ -11,7 +11,7 @@ require "queuel/client"
 module Queuel
   class << self
     extend Forwardable
-    def_delegators :client, :push, :pop, :receive
+    def_delegators :client, :push, :pop, :receive, :with
     def_delegators :config, :credentials, :default_queue
     alias << pop
   end

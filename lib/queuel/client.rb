@@ -14,7 +14,8 @@ module Queuel
     end
 
     def queue
-      given_queue || Queuel.default_queue
+      bare = (given_queue || Queuel.default_queue)
+      bare.to_s unless bare.nil?
     end
 
     protected
@@ -23,7 +24,7 @@ module Queuel
     private
 
     def queue_connection
-      engine_client.queue (given_queue || default_queue)
+      engine_client.queue queue
     end
 
     def engine_client
