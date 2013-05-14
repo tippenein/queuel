@@ -15,7 +15,7 @@ module Queuel
 
       it "can swap queues easily" do
         subject.queue.should == "default"
-        subject.with(:new_queue).queue.should == :new_queue
+        subject.with(:new_queue).queue.should == "new_queue"
         subject.queue.should == "default"
       end
     end
