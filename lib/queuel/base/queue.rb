@@ -37,7 +37,7 @@ module Queuel
       end
 
       def build_new_message(bare_message)
-        message_klass.new_from_bare(bare_message)
+        message_klass.new(bare_message)
       end
 
       def message_klass
