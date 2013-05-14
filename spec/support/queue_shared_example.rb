@@ -21,7 +21,7 @@ shared_examples "a queue" do
 
       it "should simply return a message" do
         not_for_null do
-          subject.pop.should == message
+          subject.pop.should be_a Queuel::IronMq::Message
         end
       end
 

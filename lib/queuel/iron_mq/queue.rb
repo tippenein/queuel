@@ -13,13 +13,15 @@ module Queuel
       end
 
       def pop(*args, &block)
-        queue_connection.get(*args).tap { |message|
-          if block_given? && !message.nil?
-            message = Message.new_from_iron_mq_object message
-            yield message
-            message.delete
-          end
-        }
+        bare_message = queue_connection.get(*args)
+        unless bare_message.nil?
+          Message.new_from_iron_mq_object(bare_message).tap { |message|
+            if block_given? && !message.nil?
+              yield message
+              message.delete
+            end
+          }
+        end
       end
 
       def receive(options = {}, &block)
