@@ -15,6 +15,7 @@ module Queuel
       def pop(*args, &block)
         queue_connection.get(*args).tap { |message|
           if block_given? && !message.nil?
+            message = Message.new_from_iron_mq_object message
             yield message
             message.delete
           end
