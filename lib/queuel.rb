@@ -1,7 +1,10 @@
 require "queuel/version"
 require "forwardable"
 require "queuel/null/engine"
+require "queuel/null/poller"
+require "queuel/null/queue"
 require "queuel/iron_mq/engine"
+require "queuel/iron_mq/poller"
 require "queuel/iron_mq/queue"
 require "queuel/client"
 
