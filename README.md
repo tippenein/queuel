@@ -46,6 +46,8 @@ end
 ## Usage
 
 ```ruby
+# Using default Queue
+
 Queuel.pop
 Queuel.push "My message to you"
 Queuel.receive do |message|
