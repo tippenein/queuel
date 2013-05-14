@@ -1,5 +1,6 @@
 require "queuel/version"
 require "forwardable"
+require "queuel/base/engine"
 require "queuel/null/message"
 require "queuel/null/engine"
 require "queuel/null/poller"
