@@ -68,7 +68,7 @@ module Queuel
       end
 
       def pop_new_message
-        queue.get built_options
+        queue.pop built_options
       end
 
       def start_sleep_time

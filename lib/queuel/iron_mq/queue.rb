@@ -22,7 +22,7 @@ module Queuel
       end
 
       def receive(options = {}, &block)
-        Poller.new(queue_connection, options, block).poll
+        Poller.new(self, options, block).poll
       end
 
       private
