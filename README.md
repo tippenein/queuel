@@ -46,35 +46,45 @@ end
 
 ## Usage
 
+### General Queue API
+
 ```ruby
 # Using default Queue
 Queuel.pop
 Queuel.push "My message to you"
 Queuel.receive do |message|
-  puts "I received #{message.msg}" # NOTE the message interface may change, this is currently not wrapped by the gem
+  puts "I received #{message.body}" # NOTE the message interface may change, this is currently not wrapped by the gem
 end
 
 # With the non-default queue
 Queuel.with("officials").pop
 Queuel.with("officials").push "My message to you"
 Queuel.with("officials").receive do |message|
-  puts "I received #{message.msg}" # NOTE the message interface may change, this is currently not wrapped by the gem
+  puts "I received #{message.body}" # NOTE the message interface may change, this is currently not wrapped by the gem
 end
 
 # Timeout the receiving
 Queuel.receive poll_timeout: 60 do |message|
-  puts "I received #{message.msg}" # NOTE the message interface may change, this is currently not wrapped by the gem
+  puts "I received #{message.body}" # NOTE the message interface may change, this is currently not wrapped by the gem
 end
 
 # Don't receive more than 10 nil messages
 Queuel.receive max_consecutive_fails: 10 do |message|
-  puts "I received #{message.msg}" # NOTE the message interface may change, this is currently not wrapped by the gem
+  puts "I received #{message.body}" # NOTE the message interface may change, this is currently not wrapped by the gem
 end
 
 # Break on nil
 Queuel.receive break_if_nil: true do |message|
-  puts "I received #{message.msg}" # NOTE the message interface may change, this is currently not wrapped by the gem
+  puts "I received #{message.body}" # NOTE the message interface may change, this is currently not wrapped by the gem
 end
+```
+
+### The message
+
+```ruby
+message.id        # => ID of the message
+message.body      # => Message body
+message.delete    # => Delete the message
 ```
 
 ## TODO
