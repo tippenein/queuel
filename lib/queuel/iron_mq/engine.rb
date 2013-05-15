@@ -3,8 +3,11 @@ module Queuel
     class Engine < Base::Engine
       IronMqMissingError = Class.new(StandardError)
 
+      private
+
       def try_typhoeus
         require 'typhoeus'
+        true
       rescue LoadError
         false
       end
