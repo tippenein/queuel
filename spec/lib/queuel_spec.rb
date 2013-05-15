@@ -20,4 +20,19 @@ describe Queuel do
       subject.config.credentials.should == { username: "jon" }
     end
   end
+
+  describe "engine" do
+    its(:engine) { should == Queuel::Null::Engine }
+
+    describe "with configured" do
+      before do
+        subject.configure { engine :iron_mq }
+      end
+      after do
+        subject.configure { engine nil }
+      end
+
+      its(:engine) { should == Queuel::IronMq::Engine }
+    end
+  end
 end
