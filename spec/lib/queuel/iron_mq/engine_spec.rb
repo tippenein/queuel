@@ -29,18 +29,6 @@ module Queuel
           end
 
           its(:client_klass) { should == ::IronMQ::Client }
-
-          describe "fails on require" do
-            before do
-              subject.stub :require do
-                raise LoadError
-              end
-            end
-
-            it "finally errors on you" do
-              expect { subject.send :client_klass }.to raise_error Engine::IronMqMissingError
-            end
-          end
         end
       end
     end
