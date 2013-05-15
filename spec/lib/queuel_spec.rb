@@ -22,7 +22,10 @@ describe Queuel do
   end
 
   describe "engine" do
-    its(:engine) { should == Queuel::Null::Engine }
+    describe "unset settings" do
+      before { subject.instance_variable_set "@config", nil }
+      its(:engine) { should == Queuel::Null::Engine }
+    end
 
     describe "with configured" do
       before do
