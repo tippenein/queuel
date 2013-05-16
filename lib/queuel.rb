@@ -61,18 +61,33 @@ module Queuel
   end
 
   class Configurator
-    def self.param(*params)
-      params.each do |name|
-        attr_accessor name
-        define_method name do |*values|
-          value = values.first
-          value ? self.send("#{name}=", value) : instance_variable_get("@#{name}")
+    private
+    attr_accessor :option_values
+
+    def self.option_values
+      @option_values ||= {}
+    end
+
+    def self.param(param_name, options = {})
+      attr_accessor param_name
+      self.option_values[param_name] = options
+      define_method param_name do |*values|
+        value = values.first
+        if value
+          self.send("#{param_name}=", value)
+        else
+          instance_variable_defined?("@#{param_name}") ? instance_variable_get("@#{param_name}") : self.class.option_values[param_name][:default]
         end
       end
+      public param_name
+      public "#{param_name}="
     end
+
+    public
 
     param :credentials
     param :engine
     param :default_queue
+    param :receiver_threads, default: 1
   end
 end
