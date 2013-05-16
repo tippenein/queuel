@@ -12,7 +12,6 @@ guard :cane do
 end
 
 guard 'rspec',
-  cli: "--profile",
   all_on_start: true,
   keep_failed: true,
   rvm: ["1.9.3-p392@queuel"] do
