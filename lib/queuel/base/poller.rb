@@ -50,8 +50,12 @@ module Queuel
         end
       end
 
+      def peek_options
+        {}
+      end
+
       def peek
-        queue.peek(:n => self.workers)
+        queue.peek peek_options
       end
 
       def queue_size # TODO optionize the peek options
