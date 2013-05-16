@@ -64,16 +64,6 @@ Queuel.with("officials").receive do |message|
   puts "I received #{message.body}" # NOTE the message interface may change, this is currently not wrapped by the gem
 end
 
-# Timeout the receiving
-Queuel.receive poll_timeout: 60 do |message|
-  puts "I received #{message.body}" # NOTE the message interface may change, this is currently not wrapped by the gem
-end
-
-# Don't receive more than 10 nil messages
-Queuel.receive max_consecutive_fails: 10 do |message|
-  puts "I received #{message.body}" # NOTE the message interface may change, this is currently not wrapped by the gem
-end
-
 # Break on nil
 Queuel.receive break_if_nil: true do |message|
   puts "I received #{message.body}" # NOTE the message interface may change, this is currently not wrapped by the gem
@@ -92,7 +82,6 @@ message.delete    # => Delete the message
 
 * Implement AMQP
 * Configureable exponential back-off on `receive`
-* Configureable threading poller
 
 ## Contributing
 
