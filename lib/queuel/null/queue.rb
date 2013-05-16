@@ -2,7 +2,11 @@ require 'queuel/null/poller'
 module Queuel
   module Null
     class Queue < Base::Queue
-      def push(*)
+      def peek(options = {})
+        []
+      end
+
+      def push(message)
       end
 
       # Nullify

@@ -7,6 +7,10 @@ module Queuel
       extend Forwardable
       def_delegators :queue_connection, :peek
 
+      def peek(options = {})
+        Array(queue_connection.peek(options))
+      end
+
       # For IronMQ it should just be (message)
       def push(message)
         queue_connection.post message
