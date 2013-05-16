@@ -29,12 +29,16 @@ module Queuel
       end
 
       def receive(options = {}, &block)
-        poller_klass.new(1, self, options, block).poll
+        poller_klass.new(thread_count, self, options, block).poll
       end
 
       private
       attr_accessor :client
       attr_accessor :name
+
+      def thread_count
+        Queuel.receiver_threads
+      end
 
       def pop_bare_message(options = {})
         raise NotImplementedError, "must implement bare Message getter"

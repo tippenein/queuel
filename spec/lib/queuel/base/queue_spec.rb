@@ -6,6 +6,8 @@ module Queuel
       let(:queue_name) { double "some_queue" }
       subject { described_class.new client, queue_name }
 
+      its(:thread_count) { should == 1 }
+
       it "fails on non-impleneted push" do
         expect { subject.push("") }.to raise_error NotImplementedError
       end
