@@ -37,7 +37,7 @@ module Queuel
       attr_accessor :name
 
       def thread_count
-        Queuel.receiver_threads
+        Queuel.receiver_threads || 1
       end
 
       def pop_bare_message(options = {})
