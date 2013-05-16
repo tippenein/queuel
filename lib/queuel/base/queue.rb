@@ -8,12 +8,16 @@ module Queuel
         self.name = queue_name
       end
 
-      def push(*args)
+      def peek(options = {})
+        raise NotImplementedError, "must implement #peek"
+      end
+
+      def push(message)
         raise NotImplementedError, "must implement #push"
       end
 
-      def pop(*args, &block)
-        bare_message = pop_bare_message(*args)
+      def pop(options = {}, &block)
+        bare_message = pop_bare_message(options)
         unless bare_message.nil?
           build_new_message(bare_message).tap { |message|
             if block_given? && !message.nil?
@@ -32,7 +36,7 @@ module Queuel
       attr_accessor :client
       attr_accessor :name
 
-      def pop_bare_message(*args)
+      def pop_bare_message(options = {})
         raise NotImplementedError, "must implement bare Message getter"
       end
 

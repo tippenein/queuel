@@ -32,6 +32,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rb-fchange"
   spec.add_development_dependency "cane"
   spec.add_development_dependency "json", "~> 1.7.7"
-
   spec.add_dependency "thread"
 end

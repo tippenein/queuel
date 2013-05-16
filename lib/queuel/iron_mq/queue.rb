@@ -3,13 +3,17 @@ module Queuel
   module IronMq
     class Queue < Base::Queue
       # For IronMQ it should just be (message)
-      def push(*args)
-        queue_connection.post *args
+      def push(message)
+        queue_connection.post message
+      end
+
+      def peek(options = {})
+        queue_connection.peek options
       end
 
       private
-      def pop_bare_message(*args)
-        queue_connection.get *args
+      def pop_bare_message(options = {})
+        queue_connection.get options
       end
 
       def queue_connection

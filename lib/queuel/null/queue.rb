@@ -6,7 +6,7 @@ module Queuel
       end
 
       # Nullify
-      def pop(*args, &block)
+      def pop(options = {}, &block)
       end
     end
   end
