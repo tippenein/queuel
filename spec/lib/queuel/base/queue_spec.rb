@@ -7,7 +7,7 @@ module Queuel
       subject { described_class.new client, queue_name }
 
       it "fails on non-impleneted push" do
-        expect { subject.push }.to raise_error NotImplementedError
+        expect { subject.push("") }.to raise_error NotImplementedError
       end
 
       describe "polling" do
