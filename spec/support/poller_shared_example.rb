@@ -54,8 +54,7 @@ shared_examples "a poller" do
     describe "with 2 yields, one nil" do
       before do
         subject.stub quit_on_empty?: true
-        subject.stub sleep_time: 0
-        queue.stub(:peek).and_return [1], nil
+        queue.stub(:peek).and_return [message], nil
         subject.stub(:pop_new_message).and_return(message, nil)
       end
 
