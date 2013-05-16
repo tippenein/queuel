@@ -86,6 +86,8 @@ message.delete    # => Delete the message
 
 * Implement AMQP
 * Configureable exponential back-off on `receive`
+* Logger
+* Provide a Daemon
 
 ## Contributing
 
