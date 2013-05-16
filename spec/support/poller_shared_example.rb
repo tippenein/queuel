@@ -11,22 +11,19 @@ shared_examples "a poller" do
 
   it { should respond_to :poll }
 
-  describe "profiling", profile: true do
-    let(:messages) do
-      1000.times.inject([]) { |a,_| a += message }
-    end
+  describe "profiling", perf: true do
+    let(:magnitude) { 3000 }
 
     before do
       message.stub delete: true
       subject.stub quit_on_empty?: true
-      subject.stub sleep_time: 0
-      subject.stub(:pop_new_message).and_return(message, nil)
+      subject.stub(:pop_new_message).and_return(*([message]*magnitude), nil)
     end
 
     describe "with 1 thread" do
       let(:thread_count) { 1 }
       before do
-        queue.stub(:peek).and_return *([message] * 100), nil
+        queue.stub(:peek).and_return *([message] * magnitude), nil
       end
 
       it "can poll" do
@@ -36,10 +33,10 @@ shared_examples "a poller" do
       end
     end
 
-    describe "with 4 threads" do
-      let(:thread_count) { 4 }
+    describe "with 3 threads" do
+      let(:thread_count) { 3 }
       before do
-        queue.stub(:peek).and_return *([message, message, message, message] * (100/4)), nil
+        queue.stub(:peek).and_return *([message, message, message] * (magnitude/3)), nil
       end
 
       it "can poll" do
