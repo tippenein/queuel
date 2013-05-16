@@ -42,6 +42,10 @@ Queuel.configure do
 
   # currently only [:iron_mq, :null] available
   engine :iron_mq
+
+  # For Queuel.recevier {} you can configure more than one thread to
+  # handle incoming messages
+  receiver_threads 3 # default: 1
 end
 ```
 
@@ -50,7 +54,7 @@ end
 ### General Queue API
 
 ```ruby
-# Using default Queue
+# Using default Queue from config
 Queuel.pop
 Queuel.push "My message to you"
 Queuel.receive do |message|
