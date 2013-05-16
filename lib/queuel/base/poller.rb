@@ -1,4 +1,3 @@
-require 'timeout'
 require 'thread/pool'
 module Queuel
   module Base
@@ -107,14 +106,6 @@ module Queuel
 
       def quit_looping!
         self.continue_looping = false
-      end
-
-      def timeout
-        options[:poll_timeout].to_i
-      end
-
-      def timeout?
-        timeout > 0
       end
 
       def pop_new_message
