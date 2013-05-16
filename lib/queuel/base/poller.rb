@@ -132,10 +132,6 @@ module Queuel
         self.tries = 0
       end
 
-      def trying(n=1)
-        self.tries += n
-      end
-
       def tried
         self.tries += 1
       end
