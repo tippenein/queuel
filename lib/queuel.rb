@@ -1,6 +1,6 @@
 require "queuel/version"
 require "forwardable"
-require "queuel/base_klass"
+require "queuel/introspect"
 
 require "queuel/base/engine"
 require "queuel/base/queue"
@@ -20,6 +20,7 @@ require "queuel/iron_mq/poller"
 require "queuel/client"
 
 module Queuel
+  extend Introspect
   class << self
     extend Forwardable
     def_delegators :client, :push, :pop, :receive, :with
@@ -29,7 +30,7 @@ module Queuel
 
   def self.engine
     requires
-    Object.module_eval("::#{const_name}", __FILE__, __LINE__)
+    const_with_nesting const_name
   end
 
   def self.configure(&block)

@@ -1,7 +1,7 @@
 module Queuel
   module Base
     class Queue
-      extend BaseKlass
+      extend Introspect
 
       def initialize(client, queue_name)
         self.client = client
