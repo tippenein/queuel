@@ -76,7 +76,11 @@ module Queuel
         if value
           self.send("#{param_name}=", value)
         else
-          instance_variable_defined?("@#{param_name}") ? instance_variable_get("@#{param_name}") : self.class.option_values[param_name][:default]
+          if instance_variable_defined?("@#{param_name}")
+            instance_variable_get("@#{param_name}")
+          else
+            self.class.option_values[param_name][:default]
+          end
         end
       end
       public param_name
