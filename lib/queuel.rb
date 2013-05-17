@@ -1,6 +1,7 @@
 require "queuel/version"
 require "mono_logger"
 require "forwardable"
+require "queuel/configurator"
 require "queuel/introspect"
 
 require "queuel/base/engine"
@@ -61,38 +62,9 @@ module Queuel
     "Queuel::#{engines.fetch(config.engine, {}).fetch(:const, nil) || engines[:null][:const]}::Engine"
   end
 
-  class Configurator
-    private
-    attr_accessor :option_values
-
-    def self.option_values
-      @option_values ||= {}
-    end
-
-    def self.param(param_name, options = {})
-      attr_accessor param_name
-      self.option_values[param_name] = options
-      define_method param_name do |*values|
-        value = values.first
-        if value
-          self.send("#{param_name}=", value)
-        else
-          if instance_variable_defined?("@#{param_name}")
-            instance_variable_get("@#{param_name}")
-          else
-            self.class.option_values[param_name][:default]
-          end
-        end
-      end
-      public param_name
-      public "#{param_name}="
-    end
-
-    public
-
-    param :credentials
-    param :engine
-    param :default_queue
-    param :receiver_threads, default: 1
+  def self.logger
+    config.logger.tap { |log|
+      log.level = config.log_level
+    }
   end
 end

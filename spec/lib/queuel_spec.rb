@@ -9,20 +9,8 @@ describe Queuel do
   it { should respond_to :<< }
   it { should respond_to :receive }
 
-  describe "configuration" do
-    before do
-      subject.configure do
-        credentials username: "jon"
-      end
-    end
-
-    it "set the credentials" do
-      subject.config.credentials.should == { username: "jon" }
-    end
-
-    it "has a default worker count" do
-      subject.config.receiver_threads.should == 1
-    end
+  it "set the default log level on logger" do
+    subject.logger.level.should == MonoLogger::WARN
   end
 
   describe "engine" do
@@ -35,9 +23,7 @@ describe Queuel do
       before do
         subject.configure { engine :iron_mq }
       end
-      after do
-        subject.configure { engine nil }
-      end
+      after { subject.instance_variable_set("@config", nil) }
 
       its(:engine) { should == Queuel::IronMq::Engine }
     end
