@@ -46,30 +46,45 @@ module Queuel
     Client.new engine, credentials
   end
 
-  def self.engines
-    {
-      iron_mq: { require: 'iron_mq', const: "IronMq" },
-      null: { const: "Null" }
-    }
-  end
-
-  def self.requires
-    require engines[config.engine][:require] if engines.fetch(config.engine, {})[:require]
-  end
-
-  def self.engine_const_name
-    "Queuel::#{configured_engine_name}::Engine"
-  end
-
   def self.logger
     config.logger.tap { |log|
       log.level = config.log_level
     }
   end
 
+  private
+
+  def self.warn_engine_selection
+    @warned_null_engine ||= logger.warn(engine_config[:message])
+  end
+
+  def self.engine_config
+    engines.fetch(config.engine) { engines[:null] }
+  end
+
   def self.configured_engine_name
-    engines.fetch(config.engine, {}).fetch(:const, nil) ||
-      logger.warn("Using Null Engine, for compatability.") &&
-      engines[:null][:const]
+    engine_config[:const]
+  end
+
+  def self.engines
+    {
+      iron_mq: {
+        require: 'iron_mq',
+        const: "IronMq",
+        message: "Using IronMQ"
+      },
+      null: {
+        const: "Null",
+        message: "Using Null Engine, for compatability."
+      }
+    }
+  end
+
+  def self.requires
+    require engine_config[:require] if engine_config[:require]
+  end
+
+  def self.engine_const_name
+    "Queuel::#{configured_engine_name}::Engine"
   end
 end
