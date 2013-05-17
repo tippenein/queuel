@@ -21,8 +21,7 @@ module Queuel
         unless bare_message.nil?
           build_new_message(bare_message).tap { |message|
             if block_given? && !message.nil?
-              yield message
-              message.delete
+              message.delete if yield(message)
             end
           }
         end
