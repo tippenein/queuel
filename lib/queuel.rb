@@ -31,7 +31,7 @@ module Queuel
 
   def self.engine
     requires
-    const_with_nesting const_name
+    const_with_nesting engine_const_name
   end
 
   def self.configure(&block)
@@ -57,13 +57,19 @@ module Queuel
     require engines[config.engine][:require] if engines.fetch(config.engine, {})[:require]
   end
 
-  def self.const_name
-    "Queuel::#{engines.fetch(config.engine, {}).fetch(:const, nil) || engines[:null][:const]}::Engine"
+  def self.engine_const_name
+    "Queuel::#{configured_engine_name}::Engine"
   end
 
   def self.logger
     config.logger.tap { |log|
       log.level = config.log_level
     }
+  end
+
+  def self.configured_engine_name
+    engines.fetch(config.engine, {}).fetch(:const, nil) ||
+      logger.warn("Using Null Engine, for compatability.") &&
+      engines[:null][:const]
   end
 end
