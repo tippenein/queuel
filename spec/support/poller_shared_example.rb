@@ -1,7 +1,7 @@
 shared_examples "a poller" do
   let(:message) { double "message" }
   let(:queue) { double "Queue", peek: [] }
-  let(:block) { lambda{|m| } }
+  let(:block) { lambda{ |m| true } }
   let(:thread_count) { 1 }
   let(:options) { {} }
 
@@ -57,7 +57,7 @@ shared_examples "a poller" do
 
       it "can poll" do
         not_for_null do
-          block.should_receive(:call).once
+          block.should_receive(:call).once.and_return true
           message.should_receive(:delete)
           subject.poll
         end
