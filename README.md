@@ -74,6 +74,10 @@ Queuel.receive break_if_nil: true do |message|
 end
 ```
 
+#### Caveats of the receiver
+
+* Your block must return true in order to not replace the message to the Queue
+
 ### The message
 
 ```ruby
