@@ -9,13 +9,10 @@ describe Queuel do
   it { should respond_to :<< }
   it { should respond_to :receive }
 
-  it "set the default log level on logger" do
-    subject.logger.level.should == MonoLogger::WARN
-  end
-
   describe "engine" do
     describe "unset settings" do
       before { subject.instance_variable_set "@config", nil }
+      before { subject.configure { log_level 5 } }
       its(:engine) { should == Queuel::Null::Engine }
     end
 
