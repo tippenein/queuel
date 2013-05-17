@@ -31,6 +31,7 @@ module Queuel
 
   def self.engine
     requires
+    warn_engine_selection
     const_with_nesting engine_const_name
   end
 
