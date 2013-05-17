@@ -83,8 +83,7 @@ module Queuel
 
       def process_message
         message = pop_new_message
-        block.call message
-        message.delete
+        message.delete if block.call message
       end
 
       def master_looper
