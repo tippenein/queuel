@@ -1,4 +1,5 @@
 require "queuel/version"
+require "mono_logger"
 require "forwardable"
 require "queuel/introspect"
 
