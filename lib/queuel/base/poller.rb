@@ -84,6 +84,9 @@ module Queuel
       def process_message
         message = pop_new_message
         message.delete if block.call message
+      rescue => e
+        puts e
+        puts e.backtrace.join "\n"
       end
 
       def master_looper
