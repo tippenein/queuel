@@ -1,3 +1,4 @@
+require "mono_logger"
 module Queuel
   class Configurator
     InvalidConfigurationError = Class.new StandardError
