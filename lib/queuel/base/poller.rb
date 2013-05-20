@@ -34,6 +34,7 @@ module Queuel
 
       def register_trappers
         trap(:SIGINT) { shutdown }
+        trap(:INT) { shutdown }
       end
 
       def shutdown
