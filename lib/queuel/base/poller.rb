@@ -3,11 +3,11 @@ require 'thread/pool'
 module Queuel
   module Base
     class Poller
-      def initialize(workers = 1, queue, options, block)
+      def initialize(workers = 1, queue, options, param_block)
         self.workers = workers
         self.queue = queue
         self.options = options || {}
-        self.block = block
+        self.inst_block = param_block
         self.tries = 0
         self.continue_looping = true
       end
