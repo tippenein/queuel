@@ -40,12 +40,12 @@ module Queuel
         trap(:SIGINT) { shutdown }
       end
 
-      def log_action(verb, subject)
+      def log_action(verb, subject, level = :debug)
         verb = verb.to_s.upcase.gsub(/\_/, " ")
         subject = subject.to_s.upcase.gsub(/\_/, " ")
-        logger.warn "#{verb} #{subject} START"
+        logger.public_send level, "#{verb} #{subject} START"
         yield
-        logger.warn "#{verb} #{subject} COMPLETE"
+        logger.public_send level, "#{verb} #{subject} COMPLETE"
       end
 
       def shutdown
