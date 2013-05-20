@@ -79,8 +79,8 @@ module Queuel
       end
 
       def process_on_thread
-        pool.process do
-          process_message
+        pool.process inst_block do |pass_block|
+          process_message &pass_block
         end
       end
 
@@ -90,7 +90,6 @@ module Queuel
         message.delete if block.call message
       rescue => e
         puts e
-        puts e.backtrace.join "\n"
       end
 
       def master_looper
