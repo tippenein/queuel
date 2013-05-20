@@ -1,3 +1,4 @@
+require 'thread'
 require "thread/pool"
 require "forwardable"
 module Queuel
@@ -6,11 +7,11 @@ module Queuel
       extend Forwardable
       def_delegators :Queuel, :logger
 
-      def initialize(workers = 1, queue, options, block)
+      def initialize(queue, param_block, options = {}, workers = 1)
         self.workers = workers
         self.queue = queue
         self.options = options || {}
-        self.block = block
+        self.inst_block = param_block
         self.tries = 0
         self.continue_looping = true
       end
@@ -18,7 +19,7 @@ module Queuel
       def poll
         register_trappers
         logger.debug("Beginning Poll...")
-        master = master_thread
+        self.master = master_thread
         log_action(:joining, :master) { master.join }
       rescue SignalException => e
         logger.warn "Caught (#{e}), shutting Poller down"
@@ -28,16 +29,18 @@ module Queuel
       protected
       attr_accessor :tries
       attr_accessor :workers
+      attr_accessor :inst_block
 
       private
+      attr_accessor :master
       attr_accessor :queue
       attr_accessor :args
       attr_accessor :options
-      attr_accessor :block
       attr_accessor :continue_looping
 
       def register_trappers
         trap(:SIGINT) { shutdown }
+        trap(:INT) { shutdown }
       end
 
       def log_action(verb, subject, level = :debug)
@@ -49,9 +52,9 @@ module Queuel
       end
 
       def shutdown
-        log_action(:killing, :loop) { quit_looping! }
-        log_action(:killing, :master_thread) { master.kill }
         log_action(:shutting_down, :thread_pool) { pool.shutdown }
+        log_action(:killing, :master_thread) { master.kill }
+        log_action(:killing, :loop) { quit_looping! }
       end
 
       def pool
@@ -96,8 +99,9 @@ module Queuel
       end
 
       def process_message
+        register_trappers
         message = pop_new_message
-        message.delete if block.call message
+        message.delete if self.inst_block.call message
       rescue => e
         logger.warn "Received #{e} when processing #{message}"
         logger.warn "Backtrace:"
