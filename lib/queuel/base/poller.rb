@@ -84,7 +84,8 @@ module Queuel
         end
       end
 
-      def process_message
+      def process_message(&block)
+        register_trappers
         message = pop_new_message
         message.delete if block.call message
       rescue => e
