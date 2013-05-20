@@ -79,15 +79,14 @@ module Queuel
       end
 
       def process_on_thread
-        pool.process inst_block do |pass_block|
-          process_message &pass_block
+        pool.process do
+          process_message
         end
       end
 
-      def process_message(&block)
-        register_trappers
+      def process_message
         message = pop_new_message
-        message.delete if block.call message
+        message.delete if self.inst_block.call message
       rescue => e
         puts e
       end
