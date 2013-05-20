@@ -54,6 +54,6 @@ module Queuel
     param :logger, default: MonoLogger.new(STDOUT), validator: ->(logger) {
       %w[info warn debug level].all? { |msg| logger.respond_to? msg }
     }
-    param :log_level, default: MonoLogger::WARN
+    param :log_level, default: MonoLogger::ERROR
   end
 end
