@@ -22,7 +22,7 @@ module Queuel
         log_action(:joining, :master) { master.join }
       rescue SignalException => e
         logger.warn "Caught (#{e}), shutting Poller down"
-        log_action(:killing, :poller) { shutdown }
+        log_action(:killing, :poller, :warn) { shutdown }
       end
 
       protected
