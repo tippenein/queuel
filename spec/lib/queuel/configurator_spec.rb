@@ -15,7 +15,8 @@ module Queuel
         let(:some_other_logger) { double "logger" }
 
         it "fails on a logger without the correct methods" do
-          expect { subject.logger some_other_logger }.to raise_error Configurator::InvalidConfigurationError
+          expect { subject.logger some_other_logger }.to raise_error Configurator::InvalidConfigurationError,
+            "Logger must respond to #{%w[info warn debug level level]}"
         end
       end
 

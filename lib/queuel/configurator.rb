@@ -15,18 +15,20 @@ module Queuel
         value ? self.send("#{param_name}=", value) : retrieve(param_name)
       end
       define_method "#{param_name}=" do |value|
-        instance_variable_set "@#{param_name}", value
-        validate! param_name, value
+        validate!(param_name, value) &&
+          instance_variable_set("@#{param_name}", value)
       end
     end
 
     def validate(param_name, value)
-      validator = self.class.option_values[param_name][:validator] || ->(val) { true }
+      validator = self.class.option_values[param_name].fetch(:validate) { {} }[:validator] || ->(val) { true }
       validator.call value
     end
 
     def validate!(param_name, value)
-      validate(param_name, value) || raise(InvalidConfigurationError, "#{value} is not a valid value for #{param_name}")
+      message = self.class.option_values[param_name].fetch(:validate) { {} }[:message]
+      message ||= "#{value} is not a valid value for #{param_name}"
+      validate(param_name, value) || raise(InvalidConfigurationError, message)
     end
 
     def retrieve(param)
@@ -51,9 +53,12 @@ module Queuel
     param :engine
     param :default_queue
     param :receiver_threads, default: 1
-    param :logger, default: MonoLogger.new(STDOUT), validator: ->(logger) {
-      %w[info warn debug level].all? { |msg| logger.respond_to? msg } &&
-        logger.respond_to?(:level)
+    param :logger, default: MonoLogger.new(STDOUT), validate: {
+      message: "Logger must respond to #{%w[info warn debug level level]}",
+      validator: ->(logger) {
+        %w[info warn debug level].all? { |msg| logger.respond_to? msg } &&
+          logger.respond_to?(:level)
+      }
     }
     param :log_level, default: MonoLogger::ERROR
   end
