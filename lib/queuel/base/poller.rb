@@ -38,9 +38,9 @@ module Queuel
       end
 
       def shutdown
-        quit_looping!
-        master.kill
         pool.shutdown
+        master.kill
+        quit_looping!
       end
 
       def pool
