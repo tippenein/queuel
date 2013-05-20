@@ -1,3 +1,4 @@
+require 'thread'
 require 'thread/pool'
 module Queuel
   module Base
