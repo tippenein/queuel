@@ -14,7 +14,6 @@ module Queuel
 
       def poll
         register_trappers
-        pool
         self.master = master_thread
         master.join
       rescue SignalException => e
