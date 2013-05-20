@@ -8,7 +8,7 @@ module Queuel
 
       it "set the logger" do
         subject.logger.should be_a Logger
-        subject.log_level.should == MonoLogger::WARN
+        subject.log_level.should == MonoLogger::ERROR
       end
 
       describe "configured logger" do
