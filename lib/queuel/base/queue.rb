@@ -20,7 +20,7 @@ module Queuel
         bare_message = pop_bare_message(options)
         unless bare_message.nil?
           build_new_message(bare_message).tap { |message|
-            if block_given? && !message.nil?
+            if block_given? && message.present?
               message.delete if yield(message)
             end
           }
