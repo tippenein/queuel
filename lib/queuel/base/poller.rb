@@ -24,12 +24,13 @@ module Queuel
       protected
       attr_accessor :tries
       attr_accessor :workers
+      attr_accessor :inst_block
 
       private
+      attr_accessor :master
       attr_accessor :queue
       attr_accessor :args
       attr_accessor :options
-      attr_accessor :block
       attr_accessor :continue_looping
 
       def register_trappers
