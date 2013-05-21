@@ -1,5 +1,6 @@
 require "queuel/version"
 require "forwardable"
+require "queuel/core_ext/hash"
 require "queuel/serialization/json"
 require "queuel/configurator"
 require "queuel/introspect"
