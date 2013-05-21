@@ -26,7 +26,14 @@ module Queuel
   class << self
     extend Forwardable
     def_delegators :client, :push, :pop, :receive, :with
-    def_delegators :config, :credentials, :default_queue, :receiver_threads
+    def_delegators :config,
+      :credentials,
+      :default_queue,
+      :receiver_threads,
+      :decode_by_default?,
+      :decoder,
+      :encode_by_default?,
+      :encoder
     alias << pop
   end
 
