@@ -92,12 +92,6 @@ message.body      # => Message body
 message.delete    # => Delete the message
 ```
 
-## TODO
-
-* Implement AMQP
-* Configureable exponential back-off on `receive`
-* Provide a Daemon
-
 ## Contributing
 
 1. Fork it
