@@ -35,6 +35,12 @@ module Queuel
       attr_accessor :client
       attr_accessor :name
 
+      def build_push_message(message)
+        message_klass.new.tap { |m|
+          m.body = message
+        }.raw_body
+      end
+
       def thread_count
         Queuel.receiver_threads || 1
       end
