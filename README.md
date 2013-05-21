@@ -96,7 +96,8 @@ end
 
 ```ruby
 message.id        # => ID of the message
-message.body      # => Message body
+message.raw_body  # => Raw Message body
+message.body      # => Message body (parsed, if configured to do so)
 message.delete    # => Delete the message
 ```
 
@@ -105,6 +106,30 @@ message.delete    # => Delete the message
 Queuel uses [MultiJson](https://github.com/intridea/multi_json) to provide
 some auto-message decoding/encodeing features. With MultiJson you may install your own engine
 (like [Oj](https://github.com/ohler55/oj)).
+
+Because of the parsing given, you will default to encoding and decoding JSON:
+
+```ruby
+Queuel.push username: "jon"
+Queuel.pop # => { username: "jon" }
+```
+
+You can configure your decoder/encoder on the fly:
+
+```ruby
+Queuel.push { username: "jon" }, encoder: ->(body) {  }
+Queuel.pop decoder: ->(raw) { }
+Queuel.receive decoder: ->(raw) { }
+```
+
+You can turn of encoding/decoding at calltime with:
+
+```ruby
+Queuel.push { username: "jon" }, encode: false
+Queuel.pop decode: false
+Queuel.receive decode: false
+```
+
 
 ## Contributing
 
