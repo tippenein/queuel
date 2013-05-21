@@ -92,6 +92,12 @@ message.body      # => Message body
 message.delete    # => Delete the message
 ```
 
+#### Parsing
+
+Queuel uses [MultiJson](https://github.com/intridea/multi_json) to provide
+some auto-message decoding/encodeing features. With MultiJson you may install your own engine
+(like [Oj](https://github.com/ohler55/oj)).
+
 ## Contributing
 
 1. Fork it
