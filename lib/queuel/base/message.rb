@@ -19,9 +19,11 @@ module Queuel
       attr_accessor :raw_body
       attr_reader :queue
 
-      def initialize(message_object = nil, options = {})
-        self.message_object = message_object
-        self.options = options
+      # @argument message_object
+      # @argument options hash
+      def initialize(*args)
+        self.options = args.last.is_a?(Hash) ? args.pop : {}
+        self.message_object = args.pop
       end
 
       def delete

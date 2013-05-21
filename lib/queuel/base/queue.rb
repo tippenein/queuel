@@ -40,8 +40,8 @@ module Queuel
         %w[encode encoder decode decoder]
       end
 
-      def build_push_message(message)
-        message_klass.new.tap { |m|
+      def build_push_message(message, options = {})
+        message_klass.new(options).tap { |m|
           m.body = message
         }.raw_body
       end
