@@ -6,10 +6,9 @@ module Queuel
       private
       def_delegators :Queuel,
         :decode_by_default?,
-        :decoder,
-        :encode_by_default?,
-        :encoder
+        :encode_by_default?
       attr_accessor :message_object
+      attr_accessor :options
       attr_writer :id
       attr_writer :queue
 
@@ -20,8 +19,9 @@ module Queuel
       attr_accessor :raw_body
       attr_reader :queue
 
-      def initialize(message_object = nil)
+      def initialize(message_object = nil, options = {})
         self.message_object = message_object
+        self.options = options
       end
 
       def delete
@@ -43,6 +43,22 @@ module Queuel
 
       private
 
+      def decoder
+        options[:decoder] || Queuel.decoder
+      end
+
+      def encoder
+        options[:encoder] || Queuel.encoder
+      end
+
+      def encode?
+        options.fetch(:encode) { encode_by_default? }
+      end
+
+      def decode?
+        options.fetch(:decode) { decode_by_default? }
+      end
+
       def decoded_raw_body
         decode_body? ? decoder.call(raw_body) : raw_body
       end
@@ -52,11 +68,11 @@ module Queuel
       end
 
       def encode_body?
-        !@body.to_s.empty? && !encoder.nil? && encode_by_default?
+        !@body.to_s.empty? && !encoder.nil? && encode?
       end
 
       def decode_body?
-        !decoder.nil? && decode_by_default? && raw_body.is_a?(String)
+        !decoder.nil? && decode? && raw_body.is_a?(String)
       end
     end
   end
