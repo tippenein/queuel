@@ -26,7 +26,7 @@ module Queuel
   extend Introspect
   class << self
     extend Forwardable
-    def_delegators :client, :push, :pop, :receive, :with
+    def_delegators :client, :peek, :push, :pop, :receive, :with
     def_delegators :config,
       :credentials,
       :default_queue,
