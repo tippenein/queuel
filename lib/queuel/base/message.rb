@@ -1,7 +1,15 @@
+require 'forwardable'
 module Queuel
   module Base
     class Message
-      def initialize(message_object)
+      extend Forwardable
+      def_delegators :Queuel,
+        :decode_by_default?,
+        :decoder,
+        :encode_by_default?,
+        :encoder
+
+      def initialize(message_object = nil)
         self.message_object = message_object
       end
 
