@@ -21,9 +21,9 @@ module Queuel
 
       # @argument message_object
       # @argument options hash
-      def initialize(*args)
-        self.options = args.last.is_a?(Hash) ? args.pop : {}
-        self.message_object = args.pop
+      def initialize(message_object = nil, options = {})
+        self.message_object = message_object
+        self.options = options
       end
 
       def delete

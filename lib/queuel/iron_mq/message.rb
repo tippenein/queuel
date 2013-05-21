@@ -3,7 +3,7 @@ module Queuel
     class Message < Base::Message
       def raw_body
         @raw_body ||
-          message_object && message_object.body ||
+          (message_object && message_object.body) ||
           encoded_body
       end
 
