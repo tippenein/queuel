@@ -53,6 +53,17 @@ module Queuel
     param :engine
     param :default_queue
     param :receiver_threads, default: 1
+
+    param :decode_by_default, default: true
+    param :decoder, default: Queuel::Serialization::Json::Decoder, validate: {
+      validator: ->(encoder) { encoder.respond_to?(:call) }
+    }
+
+    param :encode_by_default, default: true
+    param :encoder, default: Queuel::Serialization::Json::Encoder, validate: {
+      validator: ->(encoder) { encoder.respond_to?(:call) }
+    }
+
     param :logger, default: MonoLogger.new(STDOUT), validate: {
       message: "Logger must respond to #{%w[info warn debug level level]}",
       validator: ->(logger) {
