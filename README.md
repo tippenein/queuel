@@ -52,6 +52,13 @@ Queuel.configure do
   logger Logger # default: MonoLogger.new(STDOUT)
 
   log_level MonoLogger::DEBUG # default: MonoLogger::ERROR # => 3
+
+  # Incoming messages can be automatically encoded/decoded
+  decode_by_default false # default: true
+  decoder ->(body) { MultiJson.load body } # default: Queuel::Serialization::Json::Decoder
+
+  encode_by_default false # default: true
+  encoder ->(body) { body.to_s } # default: Queuel::Serialization::Json::Encoder
 end
 ```
 
