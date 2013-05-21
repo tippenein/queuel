@@ -13,7 +13,7 @@ module Queuel
 
       # For IronMQ it should just be (message)
       def push(message)
-        queue_connection.post message
+        queue_connection.post build_push_message(message)
       end
 
       private

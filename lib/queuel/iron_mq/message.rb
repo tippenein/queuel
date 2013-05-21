@@ -2,7 +2,9 @@ module Queuel
   module IronMq
     class Message < Base::Message
       def raw_body
-        @raw_body || message_object && message_object.body
+        @raw_body ||
+          message_object && message_object.body ||
+          encoded_body
       end
 
       def delete
