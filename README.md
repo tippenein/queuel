@@ -1,6 +1,7 @@
 # Queuel
 [![Gem Version](https://badge.fury.io/rb/queuel.png)](http://badge.fury.io/rb/queuel)
 [![Build Status](https://travis-ci.org/sportngin/queuel.png?branch=master)](https://travis-ci.org/sportngin/queuel)
+[![Coverage Status](https://coveralls.io/repos/sportngin/queuel/badge.png)](https://coveralls.io/r/sportngin/queuel)
 
 Queuel is a kewl, lite wrapper around Queue interfaces. Currently it implements:
 
