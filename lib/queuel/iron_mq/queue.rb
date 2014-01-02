@@ -1,6 +1,7 @@
 require 'queuel/iron_mq/poller'
 require 'queuel/base/queue'
 require 'forwardable'
+require 'securerandom'
 module Queuel
   module IronMq
     class Queue < Base::Queue
@@ -18,11 +19,15 @@ module Queuel
 
       private
       def pop_bare_message(options = {})
-        queue_connection.get options
+        queue_connection.get options.merge(default_get_message_options)
       end
 
       def queue_connection
         @queue_connection ||= client.queue(name)
+      end
+
+      def default_get_message_options
+        { c: SecureRandom.hex }
       end
     end
   end
