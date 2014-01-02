@@ -1,6 +1,6 @@
 shared_examples "a poller" do
   let(:message) { double "message" }
-  let(:queue) { double "Queue", peek: [] }
+  let(:queue) { double "Queue", peek: [], approximate_number_of_messages: 0 }
   let(:block) { lambda{ |m| true } }
   let(:thread_count) { 1 }
   let(:options) { {} }
@@ -24,6 +24,7 @@ shared_examples "a poller" do
       let(:thread_count) { 1 }
       before do
         queue.stub(:peek).and_return *([message] * magnitude), nil
+        queue.stub(:approximate_number_of_messages).and_return *([message] * magnitude).map{|m| m.size}, 0
       end
 
       it "can poll" do
@@ -37,6 +38,7 @@ shared_examples "a poller" do
       let(:thread_count) { 3 }
       before do
         queue.stub(:peek).and_return *([message, message, message] * (magnitude/3)), nil
+        queue.stub(:approximate_number_of_messages).and_return *([message, message, message] * (magnitude/3)).map{|m| m.size}, 0
       end
 
       it "can poll" do
@@ -52,6 +54,7 @@ shared_examples "a poller" do
       before do
         subject.stub quit_on_empty?: true
         queue.stub(:peek).and_return [message], nil
+        queue.stub(:approximate_number_of_messages).and_return 1, 0
         subject.stub(:pop_new_message).and_return(message, nil)
       end
 
