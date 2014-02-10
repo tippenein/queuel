@@ -20,6 +20,14 @@ require "queuel/iron_mq/queue"
 require "queuel/iron_mq/message"
 require "queuel/iron_mq/poller"
 
+require "queuel/sqs/engine"
+require "queuel/sqs/queue"
+require "queuel/sqs/message"
+require "queuel/sqs/poller"
+
+require "queuel/sns/engine"
+require "queuel/sns/queue"
+
 require "queuel/client"
 
 module Queuel
@@ -82,6 +90,10 @@ module Queuel
         require: 'iron_mq',
         const: "IronMq",
         message: "Using IronMQ"
+      },
+      sqs: {
+        const: "SQS",
+        message: "Using Amazon SQS"
       },
       null: {
         const: "Null",

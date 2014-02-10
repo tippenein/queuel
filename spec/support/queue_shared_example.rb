@@ -29,16 +29,17 @@ shared_examples "a queue" do
       before do
         not_for_null do
           client.stub queue: queue_object_with_message
+          client.stub named: queue_object_with_message
         end
       end
 
       it "should simply return a message" do
         not_for_null do
-          subject.pop.should be_a Queuel::IronMq::Message
+          subject.pop.should be_a Queuel::Base::Message
         end
       end
 
-      it "should delete after bolck" do
+      it "should delete after block" do
         not_for_null do
           message.should_receive(:delete)
           subject.pop { |m| m }
@@ -51,6 +52,7 @@ shared_examples "a queue" do
     before do
       not_for_null do
         client.stub queue: queue_object_with_nil_message
+        client.stub named: queue_object_with_message
       end
     end
 
