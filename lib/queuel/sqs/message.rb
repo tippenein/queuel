@@ -20,7 +20,7 @@ module Queuel
       def raw_body_with_sns_check
         begin
           message_object.as_sns_message.body
-        rescue ::JSON::ParserError
+        rescue ::JSON::ParserError, TypeError
           message_object.body
         end
       end
