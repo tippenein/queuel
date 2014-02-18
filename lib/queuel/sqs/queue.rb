@@ -9,10 +9,15 @@ module Queuel
         queue_connection.send_message build_push_message(message, options)
       end
 
+      def approximate_number_of_messages
+        queue_connection.approximate_number_of_messages
+      end
+
       private
       def pop_bare_message(options = {})
         queue_connection.receive_message options
       end
+
 
       def queue_connection
         @queue_connection ||= client.queues.named(name)
