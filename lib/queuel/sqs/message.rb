@@ -4,11 +4,12 @@ module Queuel
       # if message_object exists (not nil), receive the data, otherwise push
       def raw_body
         @raw_body = if message_object
-          message = decoder.call(raw_body_with_sns_check)
+          message = JSON.parse(raw_body_with_sns_check)
           if message.key?('queuel_s3_object')
             read_from_s3 message[:queuel_s3_object]
+          else
+            message_object
           end
-          message
         else
           # sqs has a limit of 64kb, 40 is arbitrary number to compensate for
           # space the hashes take up
@@ -23,17 +24,25 @@ module Queuel
         end
       end
 
+      def self.s3
+        @s3 ||= get_s3
+      end
+
+      def self.get_s3
+        AWS::S3.new(
+          :access_key_id => options[:access_token],
+          :secret_access_key => options[:secret_access_token] )
+      end
+
       def read_from_s3 key
-        token_hash = { access_key_id: credentials[:access_token],
-                       secret_access_key: credentials[:secret_access_token] }
-        object = AWS::S3.new(token_hash).buckets[credentials[:bucket_name]].objects[key]
+        object = s3.buckets[options[:bucket_name]].objects[key]
         object.read
       end
 
       def write_to_s3 (message, key)
-        my_bucket = s3.buckets[credentials[:bucket_name]]
-        f = my_bucket.objects[key]
-        f.write(Pathname.new("messages/#{key}"))
+        my_bucket = s3.buckets[options[:bucket_name]]
+        object = my_bucket.objects[key]
+        object.write(Pathname.new(key))
       end
 
       def delete
