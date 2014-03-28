@@ -16,18 +16,6 @@ module Queuel
         end
       end
 
-      def self.s3
-        @s3 ||= get_s3
-      end
-
-      def self.get_s3
-        AWS.config(
-          :access_key_id => config.access_key_id,
-          :secret_access_key => config.secret_access_key)
-        AWS::S3.new
-      end
-
-
       def write_to_s3 (message, key)
         my_bucket = s3.buckets[config.bucket_name]
         f = my_bucket.objects[key]
