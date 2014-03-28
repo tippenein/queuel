@@ -2,7 +2,8 @@ module Queuel
   module SQS
     class Message < Base::Message
       def raw_body
-        if message_object.body.bytesize > 40*1024
+
+        if !message_object.nil? && message_object.body.bytesize > 40*1024
           key = SecureRandom.urlsafe_base64
           write_to_s3 message key
           raw_body[:message_ref] = AWS::S3::S3Object.url_for(

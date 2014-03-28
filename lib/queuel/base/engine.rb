@@ -22,6 +22,7 @@ module Queuel
 
       private
       attr_accessor :credentials
+      attr_accessor :bucket_name
       attr_accessor :memoized_queues
 
       def client
