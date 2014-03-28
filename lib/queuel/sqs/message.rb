@@ -2,9 +2,36 @@ module Queuel
   module SQS
     class Message < Base::Message
       def raw_body
-        @raw_body ||
-          (message_object && raw_body_with_sns_check) ||
-          encoded_body
+        if message_object.body.bytesize > 40*1024
+          key = SecureRandom.urlsafe_base64
+          write_to_s3 message key
+          raw_body[:message_ref] = AWS::S3::S3Object.url_for(
+            "messages/#{key}",
+            config.bucket_name)
+          raw_body
+        else
+          @raw_body ||
+            (message_object && raw_body_with_sns_check) ||
+            encoded_body
+        end
+      end
+
+      def self.s3
+        @s3 ||= get_s3
+      end
+
+      def self.get_s3
+        AWS.config(
+          :access_key_id => config.access_key_id,
+          :secret_access_key => config.secret_access_key)
+        AWS::S3.new
+      end
+
+
+      def write_to_s3 (message, key)
+        my_bucket = s3.buckets[config.bucket_name]
+        f = my_bucket.objects[key]
+        f.write(Pathname.new("messages/#{key}"))
       end
 
       def delete
