@@ -12,6 +12,7 @@ module Queuel
 
       def initialize(credentials = {})
         self.credentials = credentials
+        self.bucket_name = credentials[:bucket_name]
         self.memoized_queues = {}
       end
 
