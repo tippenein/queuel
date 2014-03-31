@@ -17,7 +17,6 @@ module Queuel
       def push_message
         # encoded body is just the json string
         if encoded_body.bytesize > MAX_BYTESIZE
-          puts "sending to s3 because message is too large"
           key = SecureRandom.urlsafe_base64
           write_to_s3 encoded_body key
           self.body = { 'queuel_s3_object' => key }
