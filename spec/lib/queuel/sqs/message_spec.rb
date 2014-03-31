@@ -19,6 +19,26 @@ module Queuel
         its(:body) { should == "body" }
         its(:queue) { should == queue_double }
 
+        describe "when pulling an oversized message" do
+          let(:body) { '{"queuel_s3_object": "whatever" }' }
+
+          it "should call read_from_s3" do
+            subject.should_receive(:read_from_s3)
+            subject.raw_body
+          end
+        end
+
+        describe "when pushing an oversized json hash" do
+          before do
+            subject.send("message_object=", nil)
+            subject.stub(:encoded_body).and_return double("body", bytesize: 41*1024)
+          end
+          it "should call write_to_s3" do
+            subject.should_receive(:write_to_s3)
+            subject.raw_body
+          end
+        end
+
         describe "with json" do
           let(:body) { '{"username":"jon"}' }
           before do
