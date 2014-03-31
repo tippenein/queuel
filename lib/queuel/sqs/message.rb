@@ -30,8 +30,11 @@ module Queuel
           decoded_body = JSON.parse(message_object.body)
           if decoded_body.key?('queuel_s3_object')
             read_from_s3 decoded_body[:queuel_s3_object]
+          else
+            message_object.body
           end
         rescue ::JSON::ParserError, TypeError
+          # if message_object.body isn't a json string
           raw_body_with_sns_check
         end
       end
