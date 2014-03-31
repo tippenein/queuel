@@ -1,26 +1,38 @@
 module Queuel
   module SQS
     class Message < Base::Message
+      # sqs has a limit of 64kb, 40 is arbitrary number to compensate for
+      # space the hashes take up
+      MAX_BYTESIZE=40*1024
       # if message_object exists (not nil), receive the data, otherwise push
       def raw_body
-        @raw_body = if message_object
-          message = JSON.parse(raw_body_with_sns_check)
-          if message.key?('queuel_s3_object')
-            read_from_s3 message[:queuel_s3_object]
-          else
-            message_object
-          end
+        # set based on whether pushing or receiving
+        if @raw_body
+          @raw_body
         else
-          # sqs has a limit of 64kb, 40 is arbitrary number to compensate for
-          # space the hashes take up
-          if encoded_body.bytesize > 40*1024
-            key = SecureRandom.urlsafe_base64
-            write_to_s3 message key
-            self.body = { 'queuel_s3_object' => key }
-            encoded_body
-          end
+          message_object.nil? ? push_message : pull_message
+        end
+      end
 
-          encoded_body
+      def push_message
+        # encoded body is just the json string
+        if encoded_body.bytesize > MAX_BYTESIZE
+          puts "sending to s3 because message is too large"
+          key = SecureRandom.urlsafe_base64
+          write_to_s3 encoded_body key
+          self.body = { 'queuel_s3_object' => key }
+        end
+        encoded_body
+      end
+
+      def pull_message
+        begin
+          decoded_body = JSON.parse(message_object.body)
+          if decoded_body.key?('queuel_s3_object')
+            read_from_s3 decoded_body[:queuel_s3_object]
+          end
+        rescue ::JSON::ParserError, TypeError
+          raw_body_with_sns_check
         end
       end
 
@@ -39,9 +51,11 @@ module Queuel
         object.read
       end
 
+      # things written to s3 are expired automatically after 60 days
+      # so there is no need to manually garbage collect them.
       def write_to_s3 (message, key)
         my_bucket = s3.buckets[options[:bucket_name]]
-        object = my_bucket.objects[key]
+        object = my_bucket.objects[key].write(message)
         object.write(Pathname.new(key))
       end
 

@@ -30,14 +30,14 @@ module Queuel
         end
 
         describe "with valid SNS message" do
-          let(:sns_body) { "Hello From SNS"}
+          let(:sns_body) { "Hello From SNS" }
           before do
             message_object.stub(:as_sns_message).and_return double("SNSMessage", body: sns_body)
           end
           its(:raw_body) { should == sns_body }
           its(:raw_body) { should_not == message_object.body}
 
-          describe "that is json" do
+          describe "which is json" do
             let(:sns_body) { '{"username":"jon"}' }
             before do
               subject.stub decode_body?: true
