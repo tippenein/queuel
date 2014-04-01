@@ -56,9 +56,15 @@ module Queuel
       # things written to s3 are expired automatically after 60 days
       # so there is no need to manually garbage collect them.
       def write_to_s3 (message, key)
-        my_bucket = s3.buckets[options[:bucket_name]]
-        object = my_bucket.objects[key].write(message)
-        object.write(Pathname.new(key))
+        begin
+          my_bucket = s3.buckets[options[:bucket_name]]
+          my_bucket.objects[key].write(message)
+        rescue
+          raise BucketDoesNotExistError "Bucket has either expired or does not exist"
+        end
+      end
+
+      class BucketDoesNotExistError < StandardError
       end
 
       def delete
