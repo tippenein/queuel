@@ -13,6 +13,7 @@ module Queuel
         before do
           subject.stub decode_body?: false
           message_object.stub(:as_sns_message).and_raise ::JSON::ParserError
+          Queuel.configure { engine :sqs }
         end
 
         its(:id) { should == 1 }
@@ -31,7 +32,7 @@ module Queuel
         describe "when pushing an oversized json hash" do
           before do
             subject.send("message_object=", nil)
-            subject.stub(:encoded_body).and_return double("body", bytesize: 41*1024)
+            subject.stub(:encoded_body).and_return double("body", bytesize: subject.max_bytesize+1)
           end
           it "should call write_to_s3" do
             subject.should_receive(:write_to_s3)

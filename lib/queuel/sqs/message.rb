@@ -38,7 +38,7 @@ module Queuel
       end
 
       def max_bytesize
-        client_klass.maximum_message_size
+        options[:max_bytesize] || 64 * 1024
       end
 
       def self.s3
