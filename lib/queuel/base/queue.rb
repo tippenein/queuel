@@ -32,6 +32,10 @@ module Queuel
         poller_klass.new(self, block, options, thread_count).poll
       end
 
+      def size
+        raise NotImplementedError, "must implement #size"
+      end
+
       private
       attr_accessor :client
       attr_accessor :name

@@ -13,6 +13,10 @@ module Queuel
         queue_connection.approximate_number_of_messages
       end
 
+      def size
+        approximate_number_of_messages
+      end
+
       private
       def pop_bare_message(options = {})
         queue_connection.receive_message options
