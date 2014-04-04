@@ -7,7 +7,7 @@ module Queuel
 
       attr_accessor :credentials
 
-      def initialize(client, queue_name, credentials)
+      def initialize(client, queue_name, credentials={})
         self.client = client
         self.name = queue_name
         self.credentials = credentials
