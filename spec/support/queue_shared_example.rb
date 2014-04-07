@@ -7,29 +7,16 @@ shared_examples "a queue" do
   end
 
   # Poller object handles this
-  it { should respond_to :receive }
   it { should respond_to :push }
   it { should respond_to :pop }
-  it { should respond_to :peek }
-
-  describe "peek" do
-    before do
-      not_for_null do
-        client.stub queue: queue_object_with_message
-      end
-    end
-
-    it "should take options and return an array" do
-      subject.peek(option: true).should be_an Array
-    end
-  end
+  it { should respond_to :size }
 
   describe "pop" do
     describe "with messages" do
       before do
         not_for_null do
           client.stub queue: queue_object_with_message
-          client.stub named: queue_object_with_message
+          client.stub_chain :queues, named: queue_object_with_message
         end
       end
 
@@ -52,7 +39,7 @@ shared_examples "a queue" do
     before do
       not_for_null do
         client.stub queue: queue_object_with_nil_message
-        client.stub named: queue_object_with_message
+        client.stub_chain :queues, named: queue_object_with_nil_message
       end
     end
 
