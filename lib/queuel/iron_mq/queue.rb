@@ -17,6 +17,10 @@ module Queuel
         queue_connection.post build_push_message(message, options)
       end
 
+      def size
+        queue_connection.size
+      end
+
       private
       def pop_bare_message(options = {})
         queue_connection.get options.merge(default_get_message_options)

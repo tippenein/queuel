@@ -5,6 +5,15 @@ module Queuel
     class Queue < Base::Queue
       extend Forwardable
 
+      attr_accessor :credentials
+
+      def initialize(client, queue_name, credentials={})
+        self.client = client
+        self.name = queue_name
+        self.credentials = credentials
+      end
+
+
       def push(message, options = {})
         queue_connection.send_message build_push_message(message, options)
       end
@@ -13,7 +22,18 @@ module Queuel
         queue_connection.approximate_number_of_messages
       end
 
+      def size
+        approximate_number_of_messages
+      end
+
       private
+
+
+      def build_new_message(bare_message, options = {})
+        message_klass.new(bare_message, credentials)
+      end
+
+
       def pop_bare_message(options = {})
         queue_connection.receive_message options
       end
