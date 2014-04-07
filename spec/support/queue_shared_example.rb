@@ -9,6 +9,7 @@ shared_examples "a queue" do
   # Poller object handles this
   it { should respond_to :push }
   it { should respond_to :pop }
+  it { should respond_to :size }
 
   describe "pop" do
     describe "with messages" do

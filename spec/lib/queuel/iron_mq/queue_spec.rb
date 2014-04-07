@@ -14,6 +14,14 @@ module Queuel
 
       it_should_behave_like "a queue"
 
+      describe "size" do
+        it "should check the queue_connection for size" do
+          client.stub queue: queue_object_with_message
+          queue_object_with_message.should_receive(:size)
+          subject.size
+        end
+      end
+
       describe "peek" do
         before do
           not_for_null do
