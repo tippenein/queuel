@@ -6,6 +6,7 @@ module Queuel
     it { should respond_to :push }
     it { should respond_to :pop }
     it { should respond_to :receive }
+    it { should respond_to :size }
     it { should respond_to :with }
 
     describe "fails without a queue" do
