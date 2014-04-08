@@ -7,6 +7,7 @@
 Queuel is a kewl, lite wrapper around Queue interfaces. Currently it implements:
 
 * IronMQ
+* Amazon SQS
 * Null pattern
 
 Each of these should reliably implement:
