@@ -29,6 +29,16 @@ module Queuel
           end
         end
 
+        describe "#s3" do
+          subject { described_class.new(message_object, {
+            :access_token => "stuff",
+            :secret_access_token => "derp" }) }
+          it "sets the s3 object" do
+            subject.should_receive(:s3, { :access_token => "stuff", :secret_access_token => "derp" } )
+            subject.s3
+          end
+        end
+
         describe "when pushing an oversized json hash" do
           before do
             subject.send("message_object=", nil)

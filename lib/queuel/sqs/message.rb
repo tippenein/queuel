@@ -1,7 +1,9 @@
 module Queuel
   module SQS
     class Message < Base::Message
+      require 'aws-sdk'
       # if message_object exists (not nil), receive the data, otherwise push
+
       def raw_body
         @raw_body ||= message_object.nil? ? push_message : pull_message
       end
@@ -47,6 +49,10 @@ module Queuel
                   :secret_access_key => options[:secret_access_token] )
       end
 
+      def s3
+        self.class.s3
+      end
+
       def read_from_s3 key
         object = s3.buckets[options[:bucket_name]].objects[key]
         object.read
@@ -55,15 +61,18 @@ module Queuel
       # this assumes you've set up some rules for file expiration on your
       # configured bucket.
       def write_to_s3(message, key)
-        begin
-          my_bucket = s3.buckets[options[:bucket_name]]
-          my_bucket.objects[key].write(message)
-        rescue
+        bucket_name = options[:bucket_name]
+        raise NoBucketNameSupplied if bucket_name.nil?
+        my_bucket = s3.buckets[bucket_name]
+        if my_bucket.exists?
+          begin
+            my_bucket.objects[key].write(message)
+          rescue AWS::S3::Errors::AccessDenied => e
+            raise InsufficientPermissions "Write permissions were denied: #{e.message}"
+          end
+        else
           raise BucketDoesNotExistError, "Bucket has either expired or does not exist"
         end
-      end
-
-      class BucketDoesNotExistError < StandardError
       end
 
       def delete
@@ -84,6 +93,15 @@ module Queuel
         end
       end
       private :raw_body_with_sns_check
+
+      class NoBucketNameSupplied < Exception
+      end
+
+      class InsufficientPermissions < StandardError
+      end
+
+      class BucketDoesNotExistError < StandardError
+      end
     end
   end
 end
