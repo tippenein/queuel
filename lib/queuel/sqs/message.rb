@@ -1,7 +1,6 @@
 module Queuel
   module SQS
     class Message < Base::Message
-      require 'aws-sdk'
       # if message_object exists (not nil), receive the data, otherwise push
 
       def raw_body
