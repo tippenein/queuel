@@ -22,10 +22,26 @@ module Queuel
         its(:queue) { should == queue_double }
 
         describe "when pulling an oversized message" do
-          let(:body) { '{"queuel_s3_object": "whatever" }' }
+          let(:message) {
+            double("{'queuel_s3_object': 'whatever' }", bytesize: subject.max_bytesize+1) }
+          before do
+            subject.stub(:encoded_body).and_return message
+          end
+          it "should call s3_transaction with read" do
+            subject.should_receive(:s3_transaction).with(:read, "whatever")
+            subject.raw_body
+          end
+        end
 
-          it "should call read_from_s3" do
-            subject.should_receive(:read_from_s3)
+        describe "when pushing an oversized json hash" do
+          let(:message) { double("body", bytesize: subject.max_bytesize+1) }
+          before do
+            subject.send("message_object=", nil)
+            subject.stub(:encoded_body).and_return message
+          end
+          it "should call s3_transaction with write" do
+            subject.stub(:generate_key).and_return "key"
+            subject.should_receive(:s3_transaction).with(:write, "key", message)
             subject.raw_body
           end
         end
@@ -37,17 +53,6 @@ module Queuel
           it "sets the s3 object" do
             subject.should_receive(:s3, { :access_token => "stuff", :secret_access_token => "derp" } )
             subject.s3
-          end
-        end
-
-        describe "when pushing an oversized json hash" do
-          before do
-            subject.send("message_object=", nil)
-            subject.stub(:encoded_body).and_return double("body", bytesize: subject.max_bytesize+1)
-          end
-          it "should call write_to_s3" do
-            subject.should_receive(:write_to_s3)
-            subject.raw_body
           end
         end
 
