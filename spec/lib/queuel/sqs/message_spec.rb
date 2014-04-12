@@ -21,13 +21,16 @@ module Queuel
         its(:body) { should == "body" }
         its(:queue) { should == queue_double }
 
+        it "calls raw_body_with_sns_check if not a json object" do
+          subject.should_receive(:raw_body_with_sns_check)
+          subject.raw_body
+        end
         describe "when pulling an oversized message" do
-          let(:message) {
-            double("{'queuel_s3_object': 'whatever' }", bytesize: subject.max_bytesize+1) }
-          before do
-            subject.stub(:encoded_body).and_return message
-          end
-          it "should call s3_transaction with read" do
+          let(:body) { '{"queuel_s3_object": "whatever"}' }
+          let(:message_object) { double "SQSMessage", id: 2, body: body, queue: queue_double }
+          subject { described_class.new(message_object) }
+
+          it "calls s3_transaction with read" do
             subject.should_receive(:s3_transaction).with(:read, "whatever")
             subject.raw_body
           end

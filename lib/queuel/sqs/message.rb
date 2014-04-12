@@ -5,14 +5,12 @@ module Queuel
       require 'json'
 
       def raw_body
-        @raw_body ||= message_object.nil? ? push_message : pull_message
+        @raw_body ||= message_object ? pull_message : push_message
       end
 
       def push_message
-        puts "in push message"
         if encoded_body.bytesize > max_bytesize
           key = generate_key
-          puts "sending to s3"
           s3_transaction(:write, key, encoded_body)
           self.body = { 'queuel_s3_object' => key }
         end
@@ -20,11 +18,10 @@ module Queuel
       end
 
       def pull_message
-        puts "in pull message"
         begin
-          decoded_body = JSON.parse(message_object)
+          decoded_body = ::JSON.parse(message_object.body)
           if decoded_body.key?('queuel_s3_object')
-            s3_transaction(:read, decoded_body[:queuel_s3_object])
+            s3_transaction(:read, decoded_body['queuel_s3_object'])
           else
             message_object.body
           end
@@ -38,7 +35,7 @@ module Queuel
       end
 
       def self.s3
-        @s3 ||= AWS::S3.new(
+        @s3 ||= ::AWS::S3.new(
                   :access_key_id => options[:access_token],
                   :secret_access_key => options[:secret_access_token] )
       end
@@ -99,14 +96,9 @@ module Queuel
       end
       private :raw_body_with_sns_check
 
-      class NoBucketNameSupplied < Exception
-      end
-
-      class InsufficientPermissions < StandardError
-      end
-
-      class BucketDoesNotExistError < StandardError
-      end
+      class NoBucketNameSupplied < Exception; end
+      class InsufficientPermissions < StandardError; end
+      class BucketDoesNotExistError < StandardError; end
     end
   end
 end

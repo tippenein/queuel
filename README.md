@@ -43,7 +43,7 @@ Queuel.configure do
   # requirement depends on your Queue
   credentials token: 'asdufasdf8a7sd8fa7sdf', project_id: 'project_id'
 
-  # currently only [:iron_mq, :null] available
+  # currently [:iron_mq, :sqs, :null] available
   engine :iron_mq
 
   # For Queuel.recevier {} you can configure more than one thread to
