@@ -1,8 +1,6 @@
 module Queuel
   module SQS
     class Message < Base::Message
-      # if message_object exists (not nil), receive the data, otherwise push
-      require 'json'
 
       def raw_body
         @raw_body ||= message_object ? pull_message : push_message
@@ -19,13 +17,13 @@ module Queuel
 
       def pull_message
         begin
-          decoded_body = ::JSON.parse(message_object.body)
-          if decoded_body.key?('queuel_s3_object')
-            s3_transaction(:read, decoded_body['queuel_s3_object'])
+          decoded_body = decoder.call(message_object.body)
+          if decoded_body.key?(:queuel_s3_object)
+            s3_transaction(:read, decoded_body[:queuel_s3_object])
           else
             message_object.body
           end
-        rescue ::JSON::ParserError, TypeError
+        rescue Queuel::Serialization::Json::SerializationError, TypeError
           raw_body_with_sns_check
         end
       end
@@ -64,6 +62,7 @@ module Queuel
       def s3_read(bucket, *args)
         bucket.objects[args[0]].read
       end
+
       def s3_write(bucket, *args)
         bucket.objects[args[0]].write(args[1])
       end
