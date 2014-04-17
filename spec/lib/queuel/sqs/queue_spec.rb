@@ -26,6 +26,29 @@ module Queuel
           subject.size
         end
       end
+
+      describe "push" do
+        before do
+          queue_object_with_message.should_receive(:send_message)
+                                   .with('foobar')
+        end
+
+        it "receives a call to build message with the credentials" do
+          subject.should_receive(:build_push_message)
+                 .with("foobar", credentials)
+                 .and_return('foobar')
+
+          subject.push "foobar"
+        end
+
+        it "merges options that are passed in" do
+          subject.should_receive(:build_push_message)
+                 .with("foobar", {:foo => 'bar'}.merge(credentials))
+                 .and_return('foobar')
+
+          subject.push "foobar", :foo => 'bar'
+        end
+      end
     end
   end
 end
