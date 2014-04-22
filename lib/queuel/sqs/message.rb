@@ -32,14 +32,10 @@ module Queuel
         options[:max_bytesize] || 64 * 1024
       end
 
-      def self.s3
+      def s3
         @s3 ||= ::AWS::S3.new(
                   :access_key_id => options[:access_token],
                   :secret_access_key => options[:secret_access_token] )
-      end
-
-      def s3
-        self.class.s3
       end
 
       # @method - write or read

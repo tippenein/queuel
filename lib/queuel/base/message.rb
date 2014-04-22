@@ -23,15 +23,7 @@ module Queuel
       # @argument options hash
       def initialize(message_object = nil, options = {})
         self.message_object = message_object
-        self.options = self.class.set_options options
-      end
-
-      class << self
-        attr_reader :options
-
-        def set_options options
-          @options ||= options
-        end
+        self.options = options
       end
 
       def delete
