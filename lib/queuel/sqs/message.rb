@@ -6,6 +6,16 @@ module Queuel
         @raw_body ||= message_object ? pull_message : push_message
       end
 
+      def delete
+        message_object.delete
+      end
+
+      [:id, :queue].each do |delegate|
+        define_method(delegate) do
+          instance_variable_get("@#{delegate}") || message_object && message_object.public_send(delegate)
+        end
+      end
+
       def push_message
         if encoded_body.bytesize > max_bytesize
           key = generate_key
@@ -14,6 +24,7 @@ module Queuel
         end
         encoded_body
       end
+      private :push_message
 
       def pull_message
         begin
@@ -27,20 +38,19 @@ module Queuel
           raw_body_with_sns_check
         end
       end
-
-      def delete
-        message_object.delete
-      end
+      private :pull_message
 
       def max_bytesize
         options[:max_bytesize] || 64 * 1024
       end
+      private :max_bytesize
 
       def s3
         @s3 ||= ::AWS::S3.new(
                   :access_key_id => options[:s3_access_key_id],
                   :secret_access_key => options[:s3_secret_access_key] )
       end
+      private :s3
 
       # @method - write or read
       # @args - key and message if writing
@@ -88,12 +98,6 @@ module Queuel
         end
       end
       private :raw_body_with_sns_check
-
-      [:id, :queue].each do |delegate|
-        define_method(delegate) do
-          instance_variable_get("@#{delegate}") || message_object && message_object.public_send(delegate)
-        end
-      end
 
 
       class NoBucketNameSupplied < Exception; end
