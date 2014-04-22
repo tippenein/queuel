@@ -34,14 +34,14 @@ module Queuel
 
       def s3
         @s3 ||= ::AWS::S3.new(
-                  :access_key_id => options[:access_token],
-                  :secret_access_key => options[:secret_access_token] )
+                  :access_key_id => options[:s3_access_key_id],
+                  :secret_access_key => options[:s3_secret_access_key] )
       end
 
       # @method - write or read
       # @args - key and message if writing
       def s3_transaction(method, *args)
-        bucket_name = options[:bucket_name]
+        bucket_name = options[:s3_bucket_name]
         raise NoBucketNameSupplied if bucket_name.nil?
         my_bucket = s3.buckets[bucket_name]
         if my_bucket.exists?

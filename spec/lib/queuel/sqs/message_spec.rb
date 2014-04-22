@@ -25,7 +25,8 @@ module Queuel
           subject.should_receive(:raw_body_with_sns_check)
           subject.raw_body
         end
-        describe "when pulling an oversized message" do
+
+        context "when pulling an oversized message" do
           let(:body) { '{"queuel_s3_object": "whatever"}' }
           let(:message_object) { double "SQSMessage", id: 2, body: body, queue: queue_double }
           subject { described_class.new(message_object) }
@@ -36,12 +37,13 @@ module Queuel
           end
         end
 
-        describe "when pushing an oversized json hash" do
+        context "when pushing an oversized json hash" do
           let(:message) { double("body", bytesize: subject.max_bytesize+1) }
           before do
             subject.send("message_object=", nil)
             subject.stub(:encoded_body).and_return message
           end
+
           it "should call s3_transaction with write" do
             subject.stub(:generate_key).and_return "key"
             subject.should_receive(:s3_transaction).with(:write, "key", message)
@@ -50,11 +52,13 @@ module Queuel
         end
 
         describe "#s3" do
-          subject { described_class.new(message_object, {
-            :access_token => "stuff",
-            :secret_access_token => "derp" }) }
+          subject do
+            described_class.new message_object, :s3_access_key_id => "stuff",
+                                                :s3_secret_access_key => "derp"
+          end
+
           it "sets the s3 object" do
-            subject.should_receive(:s3, { :access_token => "stuff", :secret_access_token => "derp" } )
+            AWS::S3.should_receive(:new).with(:access_key_id => "stuff", :secret_access_key => "derp")
             subject.s3
           end
         end
