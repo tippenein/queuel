@@ -90,14 +90,23 @@ Queuel.receive break_if_nil: true do |message|
 end
 ```
 
-Notes specific to the SQS engine:
-A config should be added to provide `bucket_name`, `max_bytesize`, `access_key`
-and `secret_access_key`. Without these, messages over the max_bytesize setting
-(defaults to 64kb) will be dropped from the queue.
-
 #### Caveats of the receiver
 
 * Your block must return true in order to not replace the message to the Queue
+
+#### SQS s3 fallback
+
+Currently the SQS engine is the only engine with the s3 fallback support and
+takes the following keys:
+
+* `s3_access_key_id`
+* `s3_secret_access_key`
+* `s3_bucket_name`
+* `max_bytesize` (optional)
+
+With these in place, messages over the `max_bytesize` (defaults to 64kb) will
+be sent to the designated bucket.  Without this in place, messages over SQS's
+limit be dropped from the queue.
 
 ### The message
 
