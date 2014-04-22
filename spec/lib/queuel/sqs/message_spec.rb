@@ -38,7 +38,7 @@ module Queuel
         end
 
         context "when pushing an oversized json hash" do
-          let(:message) { double("body", bytesize: subject.max_bytesize+1) }
+          let(:message) { double("body", bytesize: subject.send(:max_bytesize) + 1) }
           before do
             subject.send("message_object=", nil)
             subject.stub(:encoded_body).and_return message
@@ -59,7 +59,7 @@ module Queuel
 
           it "sets the s3 object" do
             AWS::S3.should_receive(:new).with(:access_key_id => "stuff", :secret_access_key => "derp")
-            subject.s3
+            subject.send :s3
           end
         end
 
