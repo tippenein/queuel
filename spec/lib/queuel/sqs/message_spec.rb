@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'json'
+require 'aws-sdk'
 module Queuel
   module SQS
     describe Message do
@@ -20,23 +21,45 @@ module Queuel
         its(:body) { should == "body" }
         its(:queue) { should == queue_double }
 
-        describe "when pulling an oversized message" do
-          let(:body) { '{"queuel_s3_object": "whatever" }' }
+        it "calls raw_body_with_sns_check if not a json object" do
+          subject.should_receive(:raw_body_with_sns_check)
+          subject.raw_body
+        end
 
-          it "should call read_from_s3" do
-            subject.should_receive(:read_from_s3)
+        context "when pulling an oversized message" do
+          let(:body) { '{"queuel_s3_object": "whatever"}' }
+          let(:message_object) { double "SQSMessage", id: 2, body: body, queue: queue_double }
+          subject { described_class.new(message_object) }
+
+          it "calls s3_transaction with read" do
+            subject.should_receive(:s3_transaction).with(:read, "whatever")
             subject.raw_body
           end
         end
 
-        describe "when pushing an oversized json hash" do
+        context "when pushing an oversized json hash" do
+          let(:message) { double("body", bytesize: subject.send(:max_bytesize) + 1) }
           before do
             subject.send("message_object=", nil)
-            subject.stub(:encoded_body).and_return double("body", bytesize: subject.max_bytesize+1)
+            subject.stub(:encoded_body).and_return message
           end
-          it "should call write_to_s3" do
-            subject.should_receive(:write_to_s3)
+
+          it "should call s3_transaction with write" do
+            subject.stub(:generate_key).and_return "key"
+            subject.should_receive(:s3_transaction).with(:write, "key", message)
             subject.raw_body
+          end
+        end
+
+        describe "#s3" do
+          subject do
+            described_class.new message_object, :s3_access_key_id => "stuff",
+                                                :s3_secret_access_key => "derp"
+          end
+
+          it "sets the s3 object" do
+            AWS::S3.should_receive(:new).with(:access_key_id => "stuff", :secret_access_key => "derp")
+            subject.send :s3
           end
         end
 

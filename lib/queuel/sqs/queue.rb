@@ -15,7 +15,8 @@ module Queuel
 
 
       def push(message, options = {})
-        queue_connection.send_message build_push_message(message, options)
+        built_message = build_push_message message, options.merge(credentials)
+        queue_connection.send_message built_message
       end
 
       def approximate_number_of_messages
@@ -28,16 +29,13 @@ module Queuel
 
       private
 
-
       def build_new_message(bare_message, options = {})
         message_klass.new(bare_message, credentials)
       end
 
-
       def pop_bare_message(options = {})
         queue_connection.receive_message options
       end
-
 
       def queue_connection
         @queue_connection ||= client.queues.named(name)

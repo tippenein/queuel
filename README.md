@@ -1,10 +1,12 @@
-# Queuel
+Queuel
+======
+
 [![Gem Version](https://badge.fury.io/rb/queuel.png)](http://badge.fury.io/rb/queuel)
 [![Build Status](https://travis-ci.org/sportngin/queuel.png?branch=master)](https://travis-ci.org/sportngin/queuel)
 [![Code Climate](https://codeclimate.com/github/sportngin/queuel.png)](https://codeclimate.com/github/sportngin/queuel)
 [![Coverage Status](https://coveralls.io/repos/sportngin/queuel/badge.png)](https://coveralls.io/r/sportngin/queuel)
 
-Queuel is a kewl, lite wrapper around Queue interfaces. Currently it implements:
+Queuel is a 'kewl', lite wrapper around Queue interfaces. Currently it implements:
 
 * IronMQ
 * Amazon SQS
@@ -18,7 +20,10 @@ Each of these should reliably implement:
 
 Along with some further conveniences.
 
-## Installation
+
+
+Installation
+------------
 
 Add this line to your application's Gemfile as well as the proper Gem for
 your queuing:
@@ -31,7 +36,9 @@ gem 'queuel'
 
 And then execute:
 
-    $ bundle
+```bash
+$ bundle
+```
 
 You will then want to configure:
 
@@ -43,7 +50,7 @@ Queuel.configure do
   # requirement depends on your Queue
   credentials token: 'asdufasdf8a7sd8fa7sdf', project_id: 'project_id'
 
-  # currently only [:iron_mq, :null] available
+  # currently [:iron_mq, :sqs, :null] available
   engine :iron_mq
 
   # For Queuel.recevier {} you can configure more than one thread to
@@ -65,7 +72,10 @@ Queuel.configure do
 end
 ```
 
-## Usage
+
+
+Usage
+-----
 
 ### General Queue API
 
@@ -90,14 +100,24 @@ Queuel.receive break_if_nil: true do |message|
 end
 ```
 
-Notes specific to the SQS engine:
-A config should be added to provide `bucket_name`, `max_bytesize`, `access_key`
-and `secret_access_key`. Without these, messages over the max_bytesize setting
-(defaults to 64kb) will be dropped from the queue.
-
 #### Caveats of the receiver
 
 * Your block must return true in order to not replace the message to the Queue
+
+#### SQS s3 fallback
+
+Currently the SQS engine is the only engine with the s3 fallback support and
+takes the following keys:
+
+* `s3_access_key_id`
+* `s3_secret_access_key`
+* `s3_bucket_name`
+* `max_bytesize` (optional)
+
+With these in place, messages over the `max_bytesize` (defaults to 64kb) will
+be sent to the designated bucket.  Without this in place, messages over SQS's
+limit be dropped from the queue.
+
 
 ### The message
 
@@ -138,7 +158,9 @@ Queuel.receive decode: false
 ```
 
 
-## Contributing
+
+Contributing
+------------
 
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
