@@ -1,10 +1,12 @@
-# Queuel
+Queuel
+======
+
 [![Gem Version](https://badge.fury.io/rb/queuel.png)](http://badge.fury.io/rb/queuel)
 [![Build Status](https://travis-ci.org/sportngin/queuel.png?branch=master)](https://travis-ci.org/sportngin/queuel)
 [![Code Climate](https://codeclimate.com/github/sportngin/queuel.png)](https://codeclimate.com/github/sportngin/queuel)
 [![Coverage Status](https://coveralls.io/repos/sportngin/queuel/badge.png)](https://coveralls.io/r/sportngin/queuel)
 
-Queuel is a kewl, lite wrapper around Queue interfaces. Currently it implements:
+Queuel is a 'kewl', lite wrapper around Queue interfaces. Currently it implements:
 
 * IronMQ
 * Amazon SQS
@@ -18,7 +20,10 @@ Each of these should reliably implement:
 
 Along with some further conveniences.
 
-## Installation
+
+
+Installation
+------------
 
 Add this line to your application's Gemfile as well as the proper Gem for
 your queuing:
@@ -31,7 +36,9 @@ gem 'queuel'
 
 And then execute:
 
-    $ bundle
+```bash
+$ bundle
+```
 
 You will then want to configure:
 
@@ -65,7 +72,10 @@ Queuel.configure do
 end
 ```
 
-## Usage
+
+
+Usage
+-----
 
 ### General Queue API
 
@@ -108,6 +118,7 @@ With these in place, messages over the `max_bytesize` (defaults to 64kb) will
 be sent to the designated bucket.  Without this in place, messages over SQS's
 limit be dropped from the queue.
 
+
 ### The message
 
 ```ruby
@@ -147,7 +158,9 @@ Queuel.receive decode: false
 ```
 
 
-## Contributing
+
+Contributing
+------------
 
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
