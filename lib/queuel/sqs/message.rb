@@ -28,6 +28,10 @@ module Queuel
         end
       end
 
+      def delete
+        message_object.delete
+      end
+
       def max_bytesize
         options[:max_bytesize] || 64 * 1024
       end
@@ -54,24 +58,17 @@ module Queuel
           raise BucketDoesNotExistError, "Bucket has either expired or does not exist"
         end
       end
+      private :s3_transaction
 
       def s3_read(bucket, *args)
         bucket.objects[args[0]].read
       end
+      private :s3_read
 
       def s3_write(bucket, *args)
         bucket.objects[args[0]].write(args[1])
       end
-
-      def delete
-        message_object.delete
-      end
-
-      [:id, :queue].each do |delegate|
-        define_method(delegate) do
-          instance_variable_get("@#{delegate}") || message_object && message_object.public_send(delegate)
-        end
-      end
+      private :s3_write
 
       def generate_key
         key = [
@@ -81,6 +78,7 @@ module Queuel
         ].join('-')
         key
       end
+      private :generate_key
 
       def raw_body_with_sns_check
         begin
@@ -90,6 +88,13 @@ module Queuel
         end
       end
       private :raw_body_with_sns_check
+
+      [:id, :queue].each do |delegate|
+        define_method(delegate) do
+          instance_variable_get("@#{delegate}") || message_object && message_object.public_send(delegate)
+        end
+      end
+
 
       class NoBucketNameSupplied < Exception; end
       class InsufficientPermissions < StandardError; end
