@@ -39,8 +39,8 @@ module Queuel
       attr_accessor :continue_looping
 
       def register_trappers
-        trap(:SIGINT) { shutdown }
-        trap(:INT) { shutdown }
+        trap(:SIGINT) { Thread.new{shutdown}.join }
+        trap(:INT) { Thread.new{shutdown}.join }
       end
 
       def log_action(verb, subject, level = :debug)
