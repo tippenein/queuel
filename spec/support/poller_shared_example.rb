@@ -55,7 +55,9 @@ shared_examples "a poller" do
         subject.stub quit_on_empty?: true
         queue.stub(:peek).and_return [message], nil
         queue.stub(:approximate_number_of_messages).and_return 1, 0
+        queue.stub(:max_pool_tasks).and_return nil
         subject.stub(:pop_new_message).and_return(message, nil)
+
       end
 
       it "can poll" do
