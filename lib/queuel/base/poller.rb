@@ -14,6 +14,8 @@ module Queuel
         self.inst_block = param_block
         self.tries = 0
         self.continue_looping = true
+        self.pool_tasks = 0
+        self.mutex = Mutex.new
       end
 
       def poll
@@ -30,6 +32,8 @@ module Queuel
       attr_accessor :tries
       attr_accessor :workers
       attr_accessor :inst_block
+      attr_accessor :mutex
+      attr_accessor :pool_tasks
 
       private
       attr_accessor :master
@@ -39,8 +43,8 @@ module Queuel
       attr_accessor :continue_looping
 
       def register_trappers
-        trap(:SIGINT) { shutdown }
-        trap(:INT) { shutdown }
+        trap(:SIGINT) { Thread.new{shutdown}.join }
+        trap(:INT) { Thread.new{shutdown}.join }
       end
 
       def log_action(verb, subject, level = :debug)
@@ -93,8 +97,11 @@ module Queuel
       end
 
       def process_on_thread
+        return if pool_full?
+        increment_pool_task_count
         pool.process do
           process_message
+          decrement_pool_task_count
         end
       end
 
@@ -146,7 +153,7 @@ module Queuel
       end
 
       def sleep_time
-        tries < 30 ? ((start_sleep_time + increment_sleep_time) * tries) : 3
+        tries < 30 && !pool_full? ? ((start_sleep_time + increment_sleep_time) * tries) : 3
       end
 
       def reset_tries
@@ -155,6 +162,25 @@ module Queuel
 
       def tried
         self.tries += 1
+      end
+
+      def pool_full?
+        return false unless queue.max_pool_tasks
+        self.mutex.synchronize{
+          self.pool_tasks > queue.max_pool_tasks
+        }
+      end
+
+      def increment_pool_task_count
+        self.mutex.synchronize{
+          self.pool_tasks += 1
+        }
+      end
+
+      def decrement_pool_task_count
+        self.mutex.synchronize{
+          self.pool_tasks -= 1
+        }
       end
     end
   end

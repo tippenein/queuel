@@ -54,6 +54,7 @@ module Queuel
     param :engine
     param :default_queue
     param :receiver_threads, default: 1
+    param :max_pool_tasks, deafult: nil
 
     param :decode_by_default, default: true, boolean: true
     param :decoder, default: Queuel::Serialization::Json::Decoder, validate: {

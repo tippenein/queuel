@@ -39,6 +39,7 @@ module Queuel
       :credentials,
       :default_queue,
       :receiver_threads,
+      :max_pool_tasks,
       :decode_by_default?,
       :decoder,
       :encode_by_default?,
