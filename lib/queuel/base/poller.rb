@@ -90,6 +90,7 @@ module Queuel
           mem_queue_size.times do
             process_on_thread
           end
+          GC.start
         else
           tried
           quit_looping! if quit_on_empty?
