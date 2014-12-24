@@ -54,17 +54,33 @@ shared_examples "a poller" do
       before do
         subject.stub quit_on_empty?: true
         queue.stub(:peek).and_return [message], nil
-        queue.stub(:approximate_number_of_messages).and_return 1, 0
         subject.stub(:pop_new_message).and_return(message, nil)
+
       end
 
       it "can poll" do
         not_for_null do
+          queue.stub(:approximate_number_of_messages).and_return 1, 0
+          queue.stub(:max_pool_tasks).and_return nil
           block.should_receive(:call).once.and_return true
           message.should_receive(:delete)
           subject.poll
         end
       end
+
+      it "can poll with poll limit" do
+        not_for_null do
+          queue.stub(:approximate_number_of_messages).and_return 2, 1, 0
+          queue.stub(:max_pool_tasks).and_return 1
+          block.should_receive(:call).once.and_return true
+          message.should_receive(:delete)
+          subject.should_receive(:increment_pool_task_count).at_least(1).times
+          subject.should_receive(:decrement_pool_task_count).once
+          subject.poll
+        end
+      end
     end
   end
+
+
 end

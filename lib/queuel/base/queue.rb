@@ -36,6 +36,10 @@ module Queuel
         raise NotImplementedError, "must implement #size"
       end
 
+      def max_pool_tasks
+        Queuel.max_pool_tasks || nil
+      end
+
       private
       attr_accessor :client
       attr_accessor :name
