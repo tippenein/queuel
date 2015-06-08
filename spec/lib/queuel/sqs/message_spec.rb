@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'json'
-require 'aws-sdk'
+require 'aws-sdk-v1'
 module Queuel
   module SQS
     describe Message do
