@@ -1,0 +1,13 @@
+require 'spec_helper'
+
+module Queuel
+  describe AWSConstantFinder do
+    describe "finding" do
+      subject { described_class.new :sqs }
+
+      it "loads the class" do
+        subject.find.should eq(::AWS::SQS)
+      end
+    end
+  end
+end
