@@ -6,14 +6,6 @@ module Queuel
 
       describe "getting SNS client" do
         its(:client_klass) { should == ::AWS::SNS }
-
-        describe "undefined" do
-          before do
-            subject.stub defined?: false
-          end
-
-          its(:client_klass) { should == ::AWS::SNS }
-        end
       end
     end
   end

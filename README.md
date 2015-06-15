@@ -1,5 +1,4 @@
-Queuel
-======
+# Queuel
 
 [![Gem Version](https://badge.fury.io/rb/queuel.png)](http://badge.fury.io/rb/queuel)
 [![Build Status](https://travis-ci.org/sportngin/queuel.png?branch=master)](https://travis-ci.org/sportngin/queuel)
@@ -20,16 +19,15 @@ Each of these should reliably implement:
 
 Along with some further conveniences.
 
-
-
-Installation
-------------
+# Installation
 
 Add this line to your application's Gemfile as well as the proper Gem for
 your queuing:
 
 ```ruby
-gem 'iron_mq'
+gem 'iron_mq' # if using IronMQ
+gem 'aws-sdk' # if using Amazon SQS
+gem 'aws-sdk-v1' # if using Amazon SQS but you are already using AWS and need to continue using v2
 # IronMQ recommends `gem "typhoeus"` as well for some speed benefits
 gem 'queuel'
 ```
@@ -74,8 +72,7 @@ end
 
 
 
-Usage
------
+# Usage
 
 ### General Queue API
 
@@ -159,8 +156,7 @@ Queuel.receive decode: false
 
 
 
-Contributing
-------------
+# Contributing
 
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)

@@ -1,12 +1,7 @@
-require "forwardable"
+require "queuel/aws_constant_finder"
 module Queuel
   module SQS
     class Engine < Base::Engine
-      extend Forwardable
-      def_delegators :Queuel, :logger
-
-      AWSSDKMissingError = Class.new(StandardError)
-
       def queue(which_queue)
         memoized_queues[which_queue.to_s] ||= queue_klass.new(client, which_queue, credentials)
       end
@@ -14,7 +9,7 @@ module Queuel
       private
 
       def client_klass
-        try_load(::AWS::SQS, 'aws-sdk')
+        AWSConstantFinder.find(:sqs)
       end
     end
   end
